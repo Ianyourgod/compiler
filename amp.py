@@ -84,6 +84,9 @@ class Lexer:
         while self.cur_char != None:
             if self.cur_char in " \t":
                 self.advance()
+            elif self.cur_char == "=":
+                tokens.append(Token("SET"))
+                self.advance()
             elif self.cur_char == "+":
                 self.advance()
                 if self.cur_char == "=":
