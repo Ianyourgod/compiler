@@ -1,16 +1,22 @@
 #AS
-// Hello
-#main
-change 61294 = 'h'
-change 61295 = 'e'
-change 61296 = 'l'
-change 61297 = 'l'
-change 61298 = 'o'
-
-// World
-change 61304 = 'w'
-change 61305 = 'o'
-change 61306 = 'r'
-change 61307 = 'l'
-change 61308 = 'd'
-goto #main
+change *[1]$0pos = 'h'
+change $0pos = 53547
+change *[1]$0pos = 'e'
+change $0pos = 53548
+change *[1]$0pos = 'l'
+change $0pos = 53549
+change *[1]$0pos = 'l'
+change $0pos = 53550
+change *[1]$0pos = 'o'
+change $0pos = 53552
+change *[1]$0pos = 'w'
+change $0pos = 53553
+change *[1]$0pos = 'o'
+change $0pos = 53554
+change *[1]$0pos = 'r'
+change $0pos = 53555
+change *[1]$0pos = 'l'
+change $0pos = 53556
+change *[1]$0pos = 'd'
+change $0pos = 53557
+change *[1]$0pos = '!'

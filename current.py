@@ -1,3 +1,7 @@
+DIGITS = "1234567890"
+CHARS = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+
+
 class Token:
 	def __init__(self,type,value=None) -> None:
 		self.type = type
@@ -80,12 +84,82 @@ class Lexer:
 				self.advance()
 			elif self.cur_char == ":":
 				tokens.append(Token("COLON"))
+				self.advance()
+			elif self.cur_char == ";":
+				tokens.append(Token("SEMICOLON"))
+				self.advance()
+			elif self.cur_char == '"':
+				tokens.append(self.make_string('"'))
+			elif self.cur_char == "'":
+				tokens.append(self.make_string("'"))
+			elif self.cur_char in DIGITS:
+				tokens.append(self.make_number())
+			elif self.cur_char in CHARS:
+				word = ""
+				while self.cur_char != None and self.cur_char in CHARS + DIGITS:
+					word += self.cur_char
+					self.advance()
+				if word == "let":
+					tokens.append(Token("LET"))
+				elif word == "if":
+					tokens.append(Token("IF"))
+				elif word == "else":
+					tokens.append(Token("ELSE"))
+				elif word == "while":
+					tokens.append(Token("WHILE"))
+				elif word == "for":
+					tokens.append(Token("FOR"))
+				elif word == "in":
+					tokens.append(Token("IN"))
+				elif word == "def":
+					tokens.append(Token("MAKEFUNC"))
+				elif word == "return":
+					tokens.append(Token("RETURN"))
+				elif word == "true":
+					tokens.append(Token("TRUE"))
+				elif word == "false":
+					tokens.append(Token("FALSE"))
+				elif word == "null":
+					tokens.append(Token("NULL"))
+				elif word == "and":
+					tokens.append(Token("AND"))
+				elif word == "or":
+					tokens.append(Token("OR"))
+				elif word == "not":
+					tokens.append(Token("NOT"))
+				else:
+					tokens.append(Token("IDENTIFIER",word))
+		return tokens
+	def make_string(self,opener):
+		string = ""
+		self.advance()
+		while self.cur_char != opener and self.cur_char != None:
+			string += self.cur_char
+			self.advance()
+		if self.cur_char == None:
+			raise Exception("Unexpected EOF")
+		self.advance()
+		return Token("STRING",string)
+	def make_number(self):
+		num = ""
+		while self.cur_char != None and self.cur_char in DIGITS:
+			num += self.cur_char
+			self.advance()
+		if self.cur_char == ".":
+			num += self.cur_char
+			self.advance()
+			while self.cur_char != None and self.cur_char in DIGITS:
+				num += self.cur_char
+				self.advance()
+			return Token("FLOAT",float(num))
+		return Token("INT",int(num))
 
-class Interpreter:
+class Compiler:
 	def __init__(self) -> None:
 		self.vars = []
 		self.funcs = {}
-		self.lines = ["#AS\n"]
+		self.lines = []
+		self.addLine("#AS")
 		self.addLine("define $COMPILERVAR = 0")
 	def addLine(self, line):
 		self.lines.append(line + "\n")
@@ -136,7 +210,7 @@ class Interpreter:
 	def _notVar(self,name):
 		self.addLine(f"not ${name} -> ${name}")
 	def _setPix(self,idx,chr):
-		self.addLine(f"change {idx+61294} = {chr}")
+		self.addLine(f"change *[1]{idx+53546} = {chr}")
 	def readLines(self,text):
 		lines = []
 		line = ""
@@ -151,6 +225,12 @@ class Interpreter:
 				line = ""
 			else:
 				line += i
+		cont = False
+		for i in line:
+			if  not i in " \t":
+				cont = True
+		if cont:
+			lines.append(line)
 		return lines
 
 	def compile(self,text,file_name):
@@ -170,10 +250,10 @@ class Interpreter:
 		self.compile(file_name)
 		subprocess.run(["astro8", file_name])
 
-inter = Interpreter()
-inter._createVar("a", 3)
-inter._createVar("b", 2)
-inter._addVar("a", "b")
-inter._setPix(1,"'h'")
-print(inter.vars)
-inter.compile("print 'hello world'","test.armstrong")
+cmpilr = Compiler()
+cmpilr._createVar("a", 3)
+cmpilr._createVar("b", 2)
+cmpilr._addVar("a", "b")
+cmpilr._setPix(1,"'h'")
+print(cmpilr.vars)
+cmpilr.compile("1+1","test.armstrong")
