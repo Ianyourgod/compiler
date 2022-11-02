@@ -1,0 +1,16 @@
+#AS
+// Hello
+#main
+change 61294 = 'h'
+change 61295 = 'e'
+change 61296 = 'l'
+change 61297 = 'l'
+change 61298 = 'o'
+
+// World
+change 61304 = 'w'
+change 61305 = 'o'
+change 61306 = 'r'
+change 61307 = 'l'
+change 61308 = 'd'
+goto #main
